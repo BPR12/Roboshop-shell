@@ -15,4 +15,4 @@ cp ${script_location}/files/catalogue.service /etc/systemd/system/catalogue.serv
 systemctl daemon-reload
 
 systemctl enable catalogue
-systemctl restart catalogue
+systemctl start catalogue
