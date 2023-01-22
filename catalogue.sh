@@ -1,5 +1,6 @@
 script_location=${pwd}
-set -e
+
+sudo rm -r /app/*
 
 curl -sL https://rpm.nodesource.com/setup_lts.x | bash
 yum install nodejs -y
