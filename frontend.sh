@@ -8,7 +8,7 @@ echo -e "\e[35m Remove Nginx old content\e[0m"
 rm -rf /usr/share/nginx/html/* &>>{LOG}
 
 echo -e "\e[35m Download Front end content\e[0m"
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip  &>>{LOG}
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip &>>{LOG}
 
 cd /usr/share/nginx/html &>>{LOG}
 
