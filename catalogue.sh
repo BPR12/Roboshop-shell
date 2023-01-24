@@ -20,7 +20,7 @@ print_head "Downloading App Content"
 curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip &>>${LOG}
 status_check
 
-print_head"Cleanup Old Content"
+print_head "Cleanup Old Content"
 rm -rf /app/* &>>${LOG}
 status_check
 
