@@ -8,3 +8,6 @@ else
   exit
 fi
 }
+print_head() {
+echo -e "\e[1;35m $1\e[0m"
+}
