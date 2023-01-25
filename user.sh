@@ -17,7 +17,7 @@ status_check
 mkdir -p /app &>>${LOG}
 
 print_head "Downloading App Content"
-curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip &>>${LOG}
+curl -L -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip &>>${LOG}
 status_check
 
 print_head "Cleanup Old Content"
@@ -27,7 +27,7 @@ status_check
 cd /app
 
 print_head "Extracting App Content"
-unzip /tmp/catalogue.zip &>>${LOG}
+unzip /tmp/user.zip &>>${LOG}
 status_check
 
 cd /app
@@ -36,20 +36,20 @@ print_head "Installing NodeJs Dependencies"
 npm install &>>${LOG}
 status_check
 
-print_head "Configuring Catalogue Service File"
-cp ${script_location}/files/catalogue.service /etc/systemd/system/catalogue.service &>>${LOG}
+print_head "Configuring user Service File"
+cp ${script_location}/files/user.service /etc/systemd/system/user.service &>>${LOG}
 status_check
 
 print_head "Reload systemD"
 systemctl daemon-reload &>>${LOG}
 status_check
 
-print_head "Enable Catalogue"
-systemctl enable catalogue &>>${LOG}
+print_head "Enable user"
+systemctl enable user &>>${LOG}
 status_check
 
-print_head "Start Catalogue Service"
-systemctl start catalogue &>>${LOG}
+print_head "Start user Service"
+systemctl start user &>>${LOG}
 status_check
 
 print_head "Configuring Mongo Repo"
@@ -61,5 +61,5 @@ yum install mongodb-org-shell -y &>>${LOG}
 status_check
 
 print_head "Load Schema"
-mongo --host mongodb-dev.devops22.online</app/schema/catalogue.js &>>${LOG}
+mongo --host mongodb-dev.devops22.online</app/schema/user.js &>>${LOG}
 status_check
