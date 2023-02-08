@@ -19,11 +19,11 @@ yum install mysql-community-server -y &>>${LOG}
 status_check
 
 print_head "Enable MySQL"
-systemctl enable mysql &>>${LOG}
+systemctl enable mysqld &>>${LOG}
 status_check
 
 print_head "Start MySQL"
-systemctl restart mysql &>>${LOG}
+systemctl restart mysqld &>>${LOG}
 status_check
 
 print_head "Reset Default Database Password"
