@@ -42,6 +42,60 @@ APP_PREREQ() {
 
 
 }
+SYSTEMD_SETUP() {
+
+  print_head "Configuring ${component} Service File"
+    cp ${script_location}/files/${component}.service /etc/systemd/system/${component}.service &>>${LOG}
+    status_check
+
+    print_head "Reload systemD"
+    systemctl daemon-reload &>>${LOG}
+    status_check
+
+    print_head "Enable ${component}"
+    systemctl enable ${component} &>>${LOG}
+    status_check
+
+    print_head "Start ${component} Service"
+    systemctl start ${component} &>>${LOG}
+    status_check
+
+}
+
+LOAD_SCHEMA() {
+
+  if [ ${schema_load} == "true" ]; then
+
+    if [${schema_type} == "mongo"]; then
+    print_head "Configuring Mongo Repo"
+    cp ${script_location}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
+    status_check
+
+    print_head "Install Mongo Client"
+    yum install mongodb-org-shell -y &>>${LOG}
+    status_check
+
+    print_head "Load Schema"
+    mongo --host mongodb-dev.devops22.online</app/schema/${component}.js &>>${LOG}
+    status_check
+    fi
+
+     if [${schema_type} == "mysql"]; then
+
+        print_head "Install MYSQL Client"
+        yum install mysql -y &>>${LOG}
+        status_check
+
+        print_head "Load Schema"
+        mysql -h mysql-dev.devops22.online -uroot -p${root_mysql_password} < /app/schema/shipping.sql  &>>${LOG}
+        status_check
+        fi
+
+  fi
+
+
+}
+
 NODEJS() {
   print_head "Configuring NodeJs repos"
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${LOG}
@@ -57,35 +111,9 @@ NODEJS() {
   npm install &>>${LOG}
   status_check
 
-  print_head "Configuring ${component} Service File"
-  cp ${script_location}/files/${component}.service /etc/systemd/system/${component}.service &>>${LOG}
-  status_check
+  STSTEMD_SETUP
 
-  print_head "Reload systemD"
-  systemctl daemon-reload &>>${LOG}
-  status_check
-
-  print_head "Enable ${component}"
-  systemctl enable ${component} &>>${LOG}
-  status_check
-
-  print_head "Start ${component} Service"
-  systemctl start ${component} &>>${LOG}
-  status_check
-
-if [ ${schema_load} == "true" ]; then
-  print_head "Configuring Mongo Repo"
-  cp ${script_location}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
-  status_check
-
-  print_head "Install Mongo Client"
-  yum install mongodb-org-shell -y &>>${LOG}
-  status_check
-
-  print_head "Load Schema"
-  mongo --host mongodb-dev.devops22.online</app/schema/${component}.js &>>${LOG}
-  status_check
-fi
+  LOAD_SCHEMA
 }
 
 MAVEN() {
@@ -103,5 +131,7 @@ MAVEN() {
    print_head "Copy App file to App Location"
    mv target/${component}-1.0.jar ${component}.jar  &>>${LOG}
    status_check
+
+   SYSTEMD_SETUP
 
 }
