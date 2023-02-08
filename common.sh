@@ -16,7 +16,7 @@ print_head() {
 echo -e "\e[35m $1\e[0m"
 }
 
-APP PREREQ() {
+APP_PREREQ() {
 
   print_head "Add Application user"
     id roboshop &>>${LOG}
@@ -50,6 +50,8 @@ NODEJS() {
   print_head "Install NodeJs"
   yum install nodejs -y &>>${LOG}
   status_check
+
+  APP_PREREQ
 
   print_head "Installing NodeJs Dependencies"
   npm install &>>${LOG}
@@ -92,11 +94,14 @@ MAVEN() {
     yum install maven -y &>>${LOG}
     status_check
 
-    print_head "Add Application user"
-      id roboshop &>>${LOG}
-      if [ $? -ne 0 ]; then
-        useradd roboshop &>>${LOG}
-      fi
-      status_check
+   APP_PREREQ
+
+   print_head "Build a Package"
+   yum mvn clean package &>>${LOG}
+   status_check
+
+   print_head "Copy App file to App Location"
+   mv target/${component}-1.0.jar ${component}.jar  &>>${LOG}
+   status_check
 
 }
