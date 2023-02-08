@@ -125,7 +125,7 @@ MAVEN() {
    APP_PREREQ
 
    print_head "Build a Package"
-   yum mvn clean package &>>${LOG}
+   mvn clean package &>>${LOG}
    status_check
 
    print_head "Copy App file to App Location"
