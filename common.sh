@@ -134,4 +134,6 @@ MAVEN() {
 
    SYSTEMD_SETUP
 
+   LOAD_SCHEMA
+
 }
