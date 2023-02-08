@@ -66,7 +66,8 @@ LOAD_SCHEMA() {
 
   if [ ${schema_load} == "true" ]; then
 
-    if [${schema_type} == "mongo"]; then
+    if [ ${schema_type} == "mongo" ]; then
+
     print_head "Configuring Mongo Repo"
     cp ${script_location}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
     status_check
@@ -80,16 +81,16 @@ LOAD_SCHEMA() {
     status_check
     fi
 
-     if [${schema_type} == "mysql"]; then
+    if [ ${schema_type} == "mysql" ]; then
 
-        print_head "Install MYSQL Client"
-        yum install mysql -y &>>${LOG}
-        status_check
+    print_head "Install MYSQL Client"
+    yum install mysql -y &>>${LOG}
+    status_check
 
-        print_head "Load Schema"
-        mysql -h mysql-dev.devops22.online -uroot -p${root_mysql_password} < /app/schema/shipping.sql  &>>${LOG}
-        status_check
-        fi
+    print_head "Load Schema"
+    mysql -h mysql-dev.devops22.online -uroot -p${root_mysql_password} < /app/schema/shipping.sql  &>>${LOG}
+    status_check
+    fi
 
   fi
 
