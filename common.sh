@@ -16,6 +16,32 @@ print_head() {
 echo -e "\e[35m $1\e[0m"
 }
 
+APP PREREQ() {
+
+  print_head "Add Application user"
+    id roboshop &>>${LOG}
+    if [ $? -ne 0 ]; then
+      useradd roboshop &>>${LOG}
+    fi
+    status_check
+
+    mkdir -p /app &>>${LOG}
+
+    print_head "Downloading App Content"
+    curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>${LOG}
+    status_check
+
+    print_head "Cleanup Old Content"
+    rm -rf /app/* &>>${LOG}
+    status_check
+
+    print_head "Extracting App Content"
+    cd /app
+    unzip /tmp/${component}.zip &>>${LOG}
+    status_check
+
+
+}
 NODEJS() {
   print_head "Configuring NodeJs repos"
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${LOG}
@@ -24,31 +50,6 @@ NODEJS() {
   print_head "Install NodeJs"
   yum install nodejs -y &>>${LOG}
   status_check
-
-  print_head "Add Application user"
-  id roboshop &>>${LOG}
-  if [ $? -ne 0 ]; then
-    useradd roboshop &>>${LOG}
-  fi
-  status_check
-
-  mkdir -p /app &>>${LOG}
-
-  print_head "Downloading App Content"
-  curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>${LOG}
-  status_check
-
-  print_head "Cleanup Old Content"
-  rm -rf /app/* &>>${LOG}
-  status_check
-
-  cd /app
-
-  print_head "Extracting App Content"
-  unzip /tmp/${component}.zip &>>${LOG}
-  status_check
-
-  cd /app
 
   print_head "Installing NodeJs Dependencies"
   npm install &>>${LOG}
@@ -83,4 +84,19 @@ if [ ${schema_load} == "true" ]; then
   mongo --host mongodb-dev.devops22.online</app/schema/${component}.js &>>${LOG}
   status_check
 fi
+}
+
+MAVEN() {
+
+   print_head "Install Maven"
+    yum install maven -y &>>${LOG}
+    status_check
+
+    print_head "Add Application user"
+      id roboshop &>>${LOG}
+      if [ $? -ne 0 ]; then
+        useradd roboshop &>>${LOG}
+      fi
+      status_check
+
 }
