@@ -112,7 +112,7 @@ NODEJS() {
   npm install &>>${LOG}
   status_check
 
-  STSTEMD_SETUP
+  SYSTEMD_SETUP
 
   LOAD_SCHEMA
 }
