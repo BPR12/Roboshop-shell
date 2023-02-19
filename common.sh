@@ -159,3 +159,26 @@ PYTHON() {
    SYSTEMD_SETUP
 
 }
+
+GOLANG() {
+
+   print_head "Install GoLang"
+   yum install golang -y &>>${LOG}
+   status_check
+
+   APP_PREREQ
+
+   print_head "Download Dependencies"
+   cd /app
+   go mod init dispatch
+   go get
+   go build &>>${LOG}
+   status_check
+
+   print_head "Update Passwords in Service File "
+   sed -i -e "s/roboshop_rabbitmq_password/${roboshop_rabbitmq_password}/" ${script_location}/files/${component}.service &>>${LOG}
+   status_check
+
+   SYSTEMD_SETUP
+
+}
