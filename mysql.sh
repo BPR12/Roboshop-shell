@@ -30,5 +30,6 @@ print_head "Reset Default Database Password"
 mysql_secure_installation --set-root-pass ${root_mysql_password} &>>${LOG}
 if [ $? -eq 1 ]; then
   echo "Password is already changed"
+fi
 status_check
 
